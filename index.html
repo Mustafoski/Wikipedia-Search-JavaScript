@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wikipedia App</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width ,initial-scale=1">
+<link href="styles.css" rel="stylesheet" type="text/css">
+    
+</head>
+<body onload="pageLoaded()">
+    
+
+    <div id = "content">
+        <center><h4>Wikipedia API</h4></center>
+        <div id = "search_view">
+            <div id = "search_bar">
+                <input id = "search_input" type = "text" />
+                <button onclick = "getInfo()">Search</button>
+                <h1 id ="title"></h1>
+<!--                <textarea id="info" class="info"></textarea>-->
+                <a id=link ></a>
+            </div>
+            <div id = "information">
+                <center> SEARCH Info IN Wikipedia</center>
+            </div>
+        </div>
+        
+      
+    </div>
+    
+
+
+ 
+<script src="app.js"></script>   
+</body>
+</html>
