@@ -1,6 +1,4 @@
 //https://en.wikipedia.org/w/api.php?action=opensearch&search=dog&format=json&callback=?
-
-
 const SEARCH_VIEW  = document.getElementById('search_view');
 const RESULTS_VIEW = document.getElementById('results_view');
 
@@ -8,87 +6,61 @@ const userSearchedWord = document.getElementById('search_input');
 
 const API_BASE = 'https://en.wikipedia.org/w/api.php?action=opensearch&format=json';
 
-function pageLoaded(){
-      // page started hide results_view and gallery_view
-   
-   
+function assert(condition, message) {
+    if (!condition) {
+        message = message || "Assertion failed";
+        if (typeof Error !== "undefined") {
+            throw new Error(message);
+        }
+        throw message;
+    }
 }
 
-function getInfo(){
+function pageLoaded() {
+    RESULTS_VIEW.style.visibility = "hidden";
+}
+
+function getInfo() {
     
-    var url = API_BASE + '&search=' + userSearchedWord.value;
+    const URL = API_BASE + '&search=' + userSearchedWord.value;
+    console.log(URL);
     
-    fetch(url)
-        .then((response) => {
+    fetch(URL).then((response) => {
         console.log(response);
-        if(response.status !== 200){
+        if (response.status !== 200) {
             console.error('API failed');
         }
         
-        response.json().then( (data) => {
+        response.json().then((data) => {
             console.log(data);
-            
-            
-//           var title = '';
-//            var titles = data[0];
-//            
-//            titles.forEach( (t) => {
-//                title += '<h1>' + t + '</h1>';
-//            });
-//             SEARCH_VIEW.innerHTML = title;
-            
-            var list = '';
-            var lists = data[1];
-            
-            lists.forEach( (li) => {
-                list+= '<li>' + li + '</li>';
-            });
-            SEARCH_VIEW.innerHTML.list;
-            
-            
-            
-            var link = '';
-            var links = data[3];
-            
-            links.forEach( (l) => {
-                 link += "<div class='link'> "
-                   	+ "<br />"
-                   	+ "<a href= >" + l + "</a>"
-                   	+ '</div>';
-            });
-            SEARCH_VIEW.innerHTML = link;
-                
-            
-            var info = '';
-            var information = data[2];
-            information.forEach( (i) => {
-                
-                info+= "<div class='info'> "
-                + "<br /">
-                + "<p>" + i + "</p"
-                + "</div>";
-                
-            });
-            SEARCH_VIEW.innerHTML = info;
-           
-        
-            
-           
-            
-            
-           
-            
-            
-        
 
-            
+            assert(((data[1].length === data[2].length) && 
+                    (data[1].length === data[3].length) &&
+                    (data[2].length === data[3].length)), 
+                    "Response is not well-structured.");
+
+            let result = "";
+            const titles = data[1];
+            const descriptions = data[2];
+            const links = data[3];
+
+            // or use a regular for loop
+            titles.forEach((el, index) => {
+                result += "<div>" 
+                       +    "<a href=" + '"' + links[index] + '">' + el + "</a>"
+                       +     "<br />"
+                       +     "<p>" + descriptions[index] + "</p>"
+                       + "</div>";
+            });
+
+            RESULTS_VIEW.style.visibility = "visible";
+            if (result !== "") {
+                RESULTS_VIEW.innerHTML = result;
+            } else {
+                RESULTS_VIEW.innerHTML = "<p>There was an error while processing the output.</p>";
+            }
         });
-        
-        
-       
-        
-        }).catch((err) => {
-            console.error('Data failed', err);
-    
+    }).catch((err) => {
+        console.error('Data failed', err);
     });
 }
